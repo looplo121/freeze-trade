@@ -1,0 +1,165 @@
+-- Executor-friendly visual GUI (purely aesthetic)
+-- Paste and run this in your Roblox executor
+
+-- Services
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+-- Helper: safe parent (CoreGui is typical in executor env)
+local parentUI = game:GetService("CoreGui")
+
+-- Main container
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TradeExecutorGUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = parentUI
+
+-- Main frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.fromOffset(450, 260)
+mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+mainFrame.Position = UDim2.new(0.5, 0.5, 0, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(15, 31, 68)
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent = screenGui
+local mfCorner = Instance.new("UICorner", mainFrame)
+mfCorner.CornerRadius = UDim.new(0, 24)
+
+-- Gradient background
+local bgGrad = Instance.new("UIGradient")
+bgGrad.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(18, 31, 80)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(31, 45, 95)),
+}
+bgGrad.Rotation = 135
+bgGrad.Parent = mainFrame
+
+-- Title
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, -40, 0, 50)
+title.Position = UDim2.new(0, 20, 0, 15)
+title.BackgroundTransparency = 1
+title.Text = "Trade Controls"
+title.Font = Enum.Font.GothamBold
+title.TextSize = 28
+title.TextColor3 = Color3.fromRGB(245, 245, 255)
+title.TextXAlignment = Enum.TextXAlignment.Center
+title.Parent = mainFrame
+
+-- Subtitle
+local subtitle = Instance.new("TextLabel")
+subtitle.Size = UDim2.new(1, -40, 0, 20)
+subtitle.Position = UDim2.new(0, 20, 0, 60)
+subtitle.BackgroundTransparency = 1
+subtitle.Text = "Visual-only interface • No backend logic"
+subtitle.Font = Enum.Font.Gotham
+subtitle.TextSize = 14
+subtitle.TextColor3 = Color3.fromRGB(200, 200, 220)
+subtitle.TextXAlignment = Enum.TextXAlignment.Center
+subtitle.Parent = mainFrame
+
+-- Container for buttons
+local buttonHolder = Instance.new("Frame")
+buttonHolder.Size = UDim2.new(1, -60, 0, 130)
+buttonHolder.Position = UDim2.new(0, 30, 0, 95)
+buttonHolder.BackgroundTransparency = 1
+buttonHolder.Parent = mainFrame
+
+-- Reusable button creator
+local function makeButton(name, emoji, labelText, gradientStart, gradientEnd, description)
+    local container = Instance.new("Frame")
+    container.Size = UDim2.new(0.5, -10, 1, 0)
+    container.BackgroundTransparency = 1
+    container.Parent = buttonHolder
+
+    local button = Instance.new("TextButton")
+    button.Name = name
+    button.Size = UDim2.new(1, 0, 1, 0)
+    button.BackgroundTransparency = 0
+    button.BorderSizePixel = 0
+    button.AutoButtonColor = false
+    button.Text = ""
+    button.Parent = container
+
+    local corner = Instance.new("UICorner", button)
+    corner.CornerRadius = UDim.new(0, 20)
+
+    local stroke = Instance.new("UIStroke", button)
+    stroke.Thickness = 2
+    stroke.Transparency = 0.5
+
+    local grad = Instance.new("UIGradient")
+    grad.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, gradientStart),
+        ColorSequenceKeypoint.new(1, gradientEnd),
+    }
+    grad.Rotation = 135
+    grad.Parent = button
+
+    -- Content (emoji + text)
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -20, 1, -20)
+    label.Position = UDim2.new(0, 10, 0, 10)
+    label.BackgroundTransparency = 1
+    label.Text = string.format("%s  %s", emoji, labelText)
+    label.Font = Enum.Font.GothamSemibold
+    label.TextSize = 18
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.TextXAlignment = Enum.TextXAlignment.Center
+    label.TextYAlignment = Enum.TextYAlignment.Center
+    label.Parent = button
+
+    -- Subtext
+    local sub = Instance.new("TextLabel")
+    sub.Size = UDim2.new(1, 0, 0, 16)
+    sub.Position = UDim2.new(0, 0, 1, 4)
+    sub.BackgroundTransparency = 1
+    sub.Text = description
+    sub.Font = Enum.Font.Gotham
+    sub.TextSize = 10
+    sub.TextColor3 = Color3.fromRGB(170, 170, 190)
+    sub.TextXAlignment = Enum.TextXAlignment.Center
+    sub.Parent = container
+
+    -- Hover/press animations
+    local defaultSize = button.Size
+    local hoverSize = UDim2.new(1, 8, 1, 8)
+    local tweenParams = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, tweenParams, {Size = hoverSize}):Play()
+    end)
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, tweenParams, {Size = defaultSize}):Play()
+    end)
+    button.MouseButton1Down:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.08), {Position = button.Position + UDim2.new(0, 0, 0, 2)}):Play()
+    end)
+    button.MouseButton1Up:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.08), {Position = button.Position}):Play()
+    end)
+
+    return button
+end
+
+-- Create both buttons
+local freezeBtn = makeButton(
+    "FreezeTrade",
+    "❄️",
+    "Freeze Trade",
+    Color3.fromRGB(111, 191, 240),
+    Color3.fromRGB(160, 217, 255),
+    "Pauses all outbound offers"
+)
+
+local forceBtn = makeButton(
+    "ForceAccept",
+    "✅",
+    "Force Accept",
+    Color3.fromRGB(56, 239, 125),
+    Color3.fromRGB(17, 153, 142),
+    "Immediately confirms incoming trades"
+)
+
+-- Position them side by side
+freezeBtn.Parent.Parent.Po
