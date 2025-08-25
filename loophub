@@ -1,4 +1,13 @@
--- Trade Assist GUI with Username TextBox, Profile Picture, Buttons, Credit Label, and Mobile Drag
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
 
 --// Services
 local Players = game:GetService("Players")
@@ -7,271 +16,209 @@ local playerGui = player:WaitForChild("PlayerGui")
 local tweenService = game:GetService("TweenService")
 local userInput = game:GetService("UserInputService")
 
---// Screen GUI
+--// GUI
 local TradeAssistGUI = Instance.new("ScreenGui")
 TradeAssistGUI.Name = "TradeAssistGUI"
 TradeAssistGUI.ResetOnSpawn = false
 TradeAssistGUI.IgnoreGuiInset = true
 TradeAssistGUI.Parent = playerGui
 
---// Main Frame
+--// Main Frame (Smaller Size)
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.AnchorPoint = Vector2.new(0.5, 0)
-MainFrame.Position = UDim2.new(0.5, 0, 0.25, 0)
-MainFrame.Size = UDim2.new(0.3, 0, 0.7, 0)
-MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+MainFrame.Size = UDim2.new(0, 240, 0, 320)
+MainFrame.Position = UDim2.new(0.5, -120, 0.5, -160)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
 MainFrame.BorderSizePixel = 0
 MainFrame.Active = true
 MainFrame.Parent = TradeAssistGUI
-Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 12)
+Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 10)
 
---// Mobile Drag Support
+--// Drag Support
 local dragging = false
 local dragStart, startPos
 local function updateDrag(input)
-    local delta = input.Position - dragStart
-    MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	local delta = input.Position - dragStart
+	MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 end
 MainFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = MainFrame.Position
-    end
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = MainFrame.Position
+	end
 end)
 MainFrame.InputChanged:Connect(function(input)
-    if dragging and input.UserInputType == Enum.UserInputType.Touch then
-        updateDrag(input)
-    end
+	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		updateDrag(input)
+	end
 end)
 userInput.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        dragging = false
-    end
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = false
+	end
 end)
 
 --// Top Bar
 local TopBar = Instance.new("Frame")
-TopBar.Name = "TopBar"
-TopBar.Size = UDim2.new(1, 0, 0, 40)
-TopBar.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+TopBar.Size = UDim2.new(1, 0, 0, 30)
+TopBar.BackgroundColor3 = Color3.fromRGB(35, 35, 45)
 TopBar.BorderSizePixel = 0
 TopBar.ZIndex = 2
 TopBar.Parent = MainFrame
-Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 12)
 
--- Close Button
+--// Title Label
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, -30, 1, 0)
+TitleLabel.Position = UDim2.new(0, 0, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "Trade Freeze"
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextSize = 14
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Center
+TitleLabel.ZIndex = 2
+TitleLabel.Parent = TopBar
+
+--// Close Button
 local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0, 40, 0, 40)
-CloseButton.Position = UDim2.new(1, -40, 0, 0)
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -30, 0, 0)
 CloseButton.Text = "X"
 CloseButton.Font = Enum.Font.GothamBold
-CloseButton.TextSize = 18
-CloseButton.TextColor3 = Color3.new(1, 1, 1)
-CloseButton.BackgroundColor3 = Color3.fromRGB(180, 50, 50)
+CloseButton.TextSize = 16
+CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseButton.BackgroundColor3 = Color3.fromRGB(180, 60, 60)
 CloseButton.BorderSizePixel = 0
 CloseButton.ZIndex = 3
-Instance.new("UICorner", CloseButton).CornerRadius = UDim.new(0, 8)
-Instance.new("UIStroke", CloseButton).Thickness = 1
+Instance.new("UICorner", CloseButton).CornerRadius = UDim.new(0, 6)
 CloseButton.Parent = TopBar
 CloseButton.MouseButton1Click:Connect(function()
-    TradeAssistGUI:Destroy()
+	TradeAssistGUI:Destroy()
 end)
 
--- Minimize Button
-local MinimizeButton = Instance.new("TextButton")
-MinimizeButton.Size = UDim2.new(0, 40, 0, 40)
-MinimizeButton.Position = UDim2.new(1, -80, 0, 0)
-MinimizeButton.Text = "-"
-MinimizeButton.Font = Enum.Font.GothamBold
-MinimizeButton.TextSize = 18
-MinimizeButton.TextColor3 = Color3.new(1, 1, 1)
-MinimizeButton.BackgroundColor3 = Color3.fromRGB(60, 60, 180)
-MinimizeButton.BorderSizePixel = 0
-MinimizeButton.ZIndex = 3
-Instance.new("UICorner", MinimizeButton).CornerRadius = UDim.new(0, 8)
-Instance.new("UIStroke", MinimizeButton).Thickness = 1
-MinimizeButton.Parent = TopBar
-
-local originalSize = MainFrame.Size
-local minimized = false
-
--- Content Frame
+--// Content Frame
 local ContentFrame = Instance.new("Frame")
-ContentFrame.Name = "ContentFrame"
-ContentFrame.Size = UDim2.new(1, 0, 1, -40)
-ContentFrame.Position = UDim2.new(0, 0, 0, 40)
+ContentFrame.Size = UDim2.new(1, 0, 1, -30)
+ContentFrame.Position = UDim2.new(0, 0, 0, 30)
 ContentFrame.BackgroundTransparency = 1
-ContentFrame.ClipsDescendants = true
 ContentFrame.Parent = MainFrame
 
-MinimizeButton.MouseButton1Click:Connect(function()
-    local tweenInfo = TweenInfo.new(0.25)
-    if not minimized then
-        tweenService:Create(ContentFrame, tweenInfo, {Size = UDim2.new(1, 0, 0, 0)}):Play()
-        tweenService:Create(MainFrame, tweenInfo, {Size = UDim2.new(originalSize.X.Scale, originalSize.X.Offset, 0, 40)}):Play()
-        MinimizeButton.Text = "+"
-        minimized = true
-    else
-        tweenService:Create(MainFrame, tweenInfo, {Size = originalSize}):Play()
-        tweenService:Create(ContentFrame, tweenInfo, {Size = UDim2.new(1, 0, 1, -40)}):Play()
-        MinimizeButton.Text = "-"
-        minimized = false
-    end
-end)
-
--- Profile Image Frame
+--// Profile Picture
 local PlayerIconFrame = Instance.new("Frame")
-PlayerIconFrame.AnchorPoint = Vector2.new(0.5, 0)
-PlayerIconFrame.Size = UDim2.new(0, 130, 0, 130)
-PlayerIconFrame.Position = UDim2.new(0.5, 0, 0, 10)
-PlayerIconFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+PlayerIconFrame.Size = UDim2.new(0, 80, 0, 80)
+PlayerIconFrame.Position = UDim2.new(0.5, -40, 0, 8)
+PlayerIconFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
 PlayerIconFrame.BorderSizePixel = 0
 PlayerIconFrame.ClipsDescendants = true
 PlayerIconFrame.Parent = ContentFrame
 Instance.new("UICorner", PlayerIconFrame).CornerRadius = UDim.new(1, 0)
-Instance.new("UIStroke", PlayerIconFrame).Thickness = 1.5
 
 local PlayerIcon = Instance.new("ImageLabel")
-PlayerIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-PlayerIcon.Size = UDim2.new(0, 120, 0, 120)
+PlayerIcon.Size = UDim2.new(0.85, 0, 0.85, 0)
 PlayerIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
-PlayerIcon.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-PlayerIcon.BorderSizePixel = 0
-PlayerIcon.ClipsDescendants = true
-PlayerIcon.Image = "rbxassetid://0" -- default blank
+PlayerIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+PlayerIcon.BackgroundTransparency = 1
+PlayerIcon.Image = "rbxassetid://0"
 PlayerIcon.Parent = PlayerIconFrame
-Instance.new("UICorner", PlayerIcon).CornerRadius = UDim.new(1, 0)
 
--- Username TextBox
+-- Load profile image
+local success, thumb = pcall(function()
+	return Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size180x180)
+end)
+if success then
+	PlayerIcon.Image = thumb
+end
+
+--// Username Box
 local UsernameBox = Instance.new("TextBox")
-UsernameBox.Name = "UsernameBox"
 UsernameBox.PlaceholderText = "Enter Username"
 UsernameBox.Font = Enum.Font.GothamBold
-UsernameBox.TextSize = 14
-UsernameBox.Size = UDim2.new(0.9, 0, 0, 40)
-UsernameBox.Position = UDim2.new(0.05, 0, 0, 150)
-UsernameBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+UsernameBox.TextSize = 13
+UsernameBox.Size = UDim2.new(0.85, 0, 0, 30)
+UsernameBox.Position = UDim2.new(0.5, 0, 0, 95)
+UsernameBox.AnchorPoint = Vector2.new(0.5, 0)
+UsernameBox.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
 UsernameBox.TextColor3 = Color3.new(1, 1, 1)
 UsernameBox.ClearTextOnFocus = false
-Instance.new("UICorner", UsernameBox).CornerRadius = UDim.new(0, 8)
-Instance.new("UIStroke", UsernameBox).Transparency = 0.8
 UsernameBox.Parent = ContentFrame
+Instance.new("UICorner", UsernameBox).CornerRadius = UDim.new(0, 8)
 
--- Action Buttons Container
+UsernameBox.FocusLost:Connect(function(enterPressed)
+	if enterPressed and UsernameBox.Text ~= "" then
+		local name = UsernameBox.Text
+		local ok, id = pcall(function()
+			return Players:GetUserIdFromNameAsync(name)
+		end)
+		if ok then
+			local content, _ = Players:GetUserThumbnailAsync(id, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size180x180)
+			PlayerIcon.Image = content
+		end
+	end
+end)
+
+--// Button Container
 local ButtonContainer = Instance.new("Frame")
-ButtonContainer.Size = UDim2.new(1, 0, 0, 120)
-ButtonContainer.Position = UDim2.new(0, 0, 0, 220)
+ButtonContainer.Size = UDim2.new(1, 0, 0, 100)
+ButtonContainer.Position = UDim2.new(0, 0, 0, 135)
 ButtonContainer.BackgroundTransparency = 1
 ButtonContainer.Parent = ContentFrame
 
-local ButtonLayout = Instance.new("UIListLayout", ButtonContainer)
-ButtonLayout.SortOrder = Enum.SortOrder.LayoutOrder
-ButtonLayout.Padding = UDim.new(0, 10)
-ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+local layout = Instance.new("UIListLayout", ButtonContainer)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.Padding = UDim.new(0, 6)
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+layout.VerticalAlignment = Enum.VerticalAlignment.Top
 
--- Freeze Button
-local FreezeButton = Instance.new("TextButton")
-FreezeButton.Size = UDim2.new(0.9, 0, 0, 40)
-FreezeButton.Text = "FREEZE TRADE"
-FreezeButton.Font = Enum.Font.GothamBold
-FreezeButton.TextSize = 14
-FreezeButton.TextColor3 = Color3.new(1, 1, 1)
-FreezeButton.BackgroundColor3 = Color3.fromRGB(200, 150, 50)
-Instance.new("UICorner", FreezeButton).CornerRadius = UDim.new(0, 8)
-Instance.new("UIStroke", FreezeButton).Transparency = 0.8
-FreezeButton.Parent = ButtonContainer
+local function createButton(text, color)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0.85, 0, 0, 30)
+	btn.Text = text
+	btn.Font = Enum.Font.GothamBold
+	btn.TextSize = 13
+	btn.TextColor3 = Color3.new(1, 1, 1)
+	btn.BackgroundColor3 = color
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+	btn.Parent = ButtonContainer
+	return btn
+end
 
--- Force Trade Button
-local ForceTradeButton = Instance.new("TextButton")
-ForceTradeButton.Size = UDim2.new(0.9, 0, 0, 40)
-ForceTradeButton.Text = "FORCE TRADE PETS"
-ForceTradeButton.Font = Enum.Font.GothamBold
-ForceTradeButton.TextSize = 14
-ForceTradeButton.TextColor3 = Color3.new(1, 1, 1)
-ForceTradeButton.BackgroundColor3 = Color3.fromRGB(150, 100, 200)
-Instance.new("UICorner", ForceTradeButton).CornerRadius = UDim.new(0, 8)
-Instance.new("UIStroke", ForceTradeButton).Transparency = 0.8
-ForceTradeButton.Parent = ButtonContainer
+local FreezeButton = createButton("FREEZE TRADE", Color3.fromRGB(240, 180, 60))
+local ForceButton = createButton("FORCE TRADE PETS", Color3.fromRGB(160, 120, 255))
+local AcceptButton = createButton("AUTO ACCEPT", Color3.fromRGB(70, 200, 120))
 
--- Auto Accept Button
-local AutoAcceptButton = Instance.new("TextButton")
-AutoAcceptButton.Size = UDim2.new(0.9, 0, 0, 40)
-AutoAcceptButton.Text = "AUTO ACCEPT"
-AutoAcceptButton.Font = Enum.Font.GothamBold
-AutoAcceptButton.TextSize = 14
-AutoAcceptButton.TextColor3 = Color3.new(1, 1, 1)
-AutoAcceptButton.BackgroundColor3 = Color3.fromRGB(50, 180, 100)
-Instance.new("UICorner", AutoAcceptButton).CornerRadius = UDim.new(0, 8)
-Instance.new("UIStroke", AutoAcceptButton).Transparency = 0.8
-AutoAcceptButton.Parent = ButtonContainer
+-- Notification Logic
+local function notify(txt)
+	game.StarterGui:SetCore("SendNotification", {
+		Title = "Trade Assist",
+		Text = txt,
+		Duration = 2,
+	})
+end
 
--- Credit Label
+FreezeButton.MouseButton1Click:Connect(function() notify("Trade frozen!") end)
+ForceButton.MouseButton1Click:Connect(function() notify("Force trade triggered!") end)
+AcceptButton.MouseButton1Click:Connect(function() notify("Auto accept triggered!") end)
+
+--// Credit
 local CreditLabel = Instance.new("TextLabel")
-CreditLabel.Name = "CreditLabel"
-CreditLabel.Text = "FIXED AND SKIDDED BY SIGMA @rizzify101"
+CreditLabel.Text = "Tiktok: @yawiyawiyawiz1"
 CreditLabel.Font = Enum.Font.GothamBold
-CreditLabel.TextSize = 16
-CreditLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+CreditLabel.TextSize = 13
+CreditLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
 CreditLabel.BackgroundTransparency = 1
-CreditLabel.Size = UDim2.new(1, 0, 0, 25)
-CreditLabel.Position = UDim2.new(0, 0, 1, -30)
+CreditLabel.Size = UDim2.new(1, 0, 0, 20)
+CreditLabel.Position = UDim2.new(0, 0, 1, -22)
 CreditLabel.TextXAlignment = Enum.TextXAlignment.Center
-CreditLabel.TextYAlignment = Enum.TextYAlignment.Bottom
-CreditLabel.ZIndex = 5
 CreditLabel.Parent = MainFrame
 
--- Button Events
-FreezeButton.MouseButton1Click:Connect(function()
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "Trade Assist",
-        Text = "Trade frozen!",
-        Duration = 2,
-    })
-end)
-
-ForceTradeButton.MouseButton1Click:Connect(function()
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "Trade Assist",
-        Text = "Force trade triggered!",
-        Duration = 2,
-    })
-end)
-
-AutoAcceptButton.MouseButton1Click:Connect(function()
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "Trade Assist",
-        Text = "Auto accept triggered!",
-        Duration = 2,
-    })
-end)
-
--- Username input with profile picture loading
-UsernameBox.FocusLost:Connect(function(enterPressed)
-    if enterPressed then
-        local username = UsernameBox.Text
-        if username ~= "" then
-            local success, userId = pcall(function()
-                return Players:GetUserIdFromNameAsync(username)
-            end)
-            if success then
-                local thumbType = Enum.ThumbnailType.HeadShot
-                local thumbSize = Enum.ThumbnailSize.Size180x180
-                local content, isReady = Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
-                PlayerIcon.Image = content
-                game.StarterGui:SetCore("SendNotification", {
-                    Title = "Trade Assist",
-                    Text = "Loaded profile for: "..username,
-                    Duration = 2,
-                })
-            else
-                game.StarterGui:SetCore("SendNotification", {
-                    Title = "Trade Assist",
-                    Text = "Invalid username.",
-                    Duration = 2,
-                })
-            end
-        end
-    end
-end)
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
+-- SKIDDED BY SIGMA @rizzify101
